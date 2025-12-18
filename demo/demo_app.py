@@ -43,6 +43,13 @@ download_format = st.sidebar.radio(
     help="Format for right-click downloaded images. JPG: smaller files, PNG: lossless quality"
 )
 
+lens_shape = st.sidebar.radio(
+    "Lens Shape",
+    options=["circle", "square"],
+    index=0,
+    help="Shape of the zoom lens"
+)
+
 st.sidebar.divider()
 st.sidebar.markdown("### Image Source")
 
@@ -147,6 +154,7 @@ if image_url:
         lens_size=lens_size,
         zoom_level=zoom_level,
         download_format=download_format,
+        lens_shape=lens_shape,
         key="zoom_lens_component"
     )
 else:

@@ -76,6 +76,7 @@ def image_zoom_lens(
     lens_size: int = 150,
     zoom_level: float = 2.0,
     download_format: str = 'jpg',
+    lens_shape: str = 'circle',
     key: Optional[str] = None,
 ) -> None:
     """
@@ -97,6 +98,8 @@ def image_zoom_lens(
     download_format : str, optional
         Format for downloaded images: 'jpg' or 'png' (default: 'jpg').
         JPG provides smaller file sizes, PNG preserves transparency.
+    lens_shape : str, optional
+        Shape of the zoom lens: 'circle' or 'square' (default: 'circle').
     key : str, optional
         An optional string to use as the unique key for the component.
         If this is None, and the component's arguments are changed, the
@@ -149,6 +152,10 @@ def image_zoom_lens(
     if download_format == 'jpeg':
         download_format = 'jpg'
     
+    lens_shape = lens_shape.lower()
+    if lens_shape not in ['circle', 'square']:
+        lens_shape = 'circle'
+    
     # Load the HTML file
     html_path = _COMPONENT_DIR / "frontend" / "index.html"
     with open(html_path, 'r') as f:
@@ -167,6 +174,9 @@ def image_zoom_lens(
     ).replace(
         "let downloadFormat = 'jpg';",
         f"let downloadFormat = '{download_format}';"
+    ).replace(
+        "let lensShape = 'circle';",
+        f"let lensShape = '{lens_shape}';"
     ).replace(
         'mainImage.src = imageUrl;',
         f'mainImage.src = "{image_url}";'

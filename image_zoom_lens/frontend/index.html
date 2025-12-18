@@ -25,12 +25,19 @@
         #zoomLens {
             position: absolute;
             border: 3px solid #000;
-            border-radius: 50%;
             cursor: none;
             pointer-events: none;
             box-shadow: 0 0 10px rgba(0,0,0,0.5);
             overflow: hidden;
             display: none;
+        }
+        
+        #zoomLens.circle {
+            border-radius: 50%;
+        }
+        
+        #zoomLens.square {
+            border-radius: 0;
         }
         
         #zoomLensImage {
@@ -97,6 +104,7 @@
         let currentZoomLevel = 2;
         let lensSize = 150;
         let downloadFormat = 'jpg';
+        let lensShape = 'circle';
         
         const container = document.getElementById('container');
         const mainImage = document.getElementById('mainImage');
@@ -134,10 +142,11 @@
             Streamlit.setFrameHeight(container.offsetHeight + 100);
         }
         
-        // Update lens size
+        // Update lens size and shape
         function updateLensSize() {
             zoomLens.style.width = lensSize + 'px';
             zoomLens.style.height = lensSize + 'px';
+            zoomLens.className = lensShape;
         }
         
         // Mouse move handler
@@ -243,13 +252,18 @@
             // Save context state
             ctx.save();
             
-            // Create circular clipping path for lens
+            // Create clipping path for lens
             const lensX = scaledMouseX;
             const lensY = scaledMouseY;
             const lensRadius = scaledLensSize / 2;
             
             ctx.beginPath();
-            ctx.arc(lensX, lensY, lensRadius, 0, Math.PI * 2);
+            if (lensShape === 'circle') {
+                ctx.arc(lensX, lensY, lensRadius, 0, Math.PI * 2);
+            } else {
+                // Square
+                ctx.rect(lensX - lensRadius, lensY - lensRadius, scaledLensSize, scaledLensSize);
+            }
             ctx.closePath();
             ctx.clip();
             
@@ -275,7 +289,12 @@
             ctx.strokeStyle = '#000';
             ctx.lineWidth = 3;
             ctx.beginPath();
-            ctx.arc(lensX, lensY, lensRadius, 0, Math.PI * 2);
+            if (lensShape === 'circle') {
+                ctx.arc(lensX, lensY, lensRadius, 0, Math.PI * 2);
+            } else {
+                // Square
+                ctx.rect(lensX - lensRadius, lensY - lensRadius, scaledLensSize, scaledLensSize);
+            }
             ctx.stroke();
             
             // Download the canvas as image
