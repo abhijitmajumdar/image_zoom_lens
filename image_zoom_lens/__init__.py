@@ -36,10 +36,10 @@ def image_zoom_lens(
         or file path.
     lens_size : int, optional
         Size of the zoom lens in pixels (default: 150).
-        Range: 50-300 pixels.
+        Range: 50-500 pixels.
     zoom_level : float, optional
         Initial zoom magnification level (default: 2.0).
-        Range: 1.0-5.0x.
+        Range: 1.0-20.0x.
     download_format : str, optional
         Format for downloaded images: 'jpg' or 'png' (default: 'jpg').
         JPG provides smaller file sizes, PNG preserves transparency.
@@ -69,8 +69,8 @@ def image_zoom_lens(
     """
     
     # Validate parameters
-    lens_size = max(50, min(300, lens_size))
-    zoom_level = max(1.0, min(5.0, zoom_level))
+    lens_size = max(50, min(500, lens_size))
+    zoom_level = max(1.0, min(20.0, zoom_level))
     download_format = download_format.lower()
     if download_format not in ['jpg', 'jpeg', 'png']:
         download_format = 'jpg'

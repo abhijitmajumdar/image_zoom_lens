@@ -21,7 +21,7 @@ st.sidebar.header("Configuration")
 lens_size = st.sidebar.slider(
     "Lens Size (pixels)",
     min_value=50,
-    max_value=300,
+    max_value=500,
     value=150,
     step=10,
     help="Size of the circular zoom lens"
@@ -30,7 +30,7 @@ lens_size = st.sidebar.slider(
 zoom_level = st.sidebar.slider(
     "Initial Zoom Level",
     min_value=1.0,
-    max_value=5.0,
+    max_value=20.0,
     value=2.0,
     step=0.1,
     help="Magnification level of the zoom lens"
