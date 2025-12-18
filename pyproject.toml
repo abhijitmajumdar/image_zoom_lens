@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "image_zoom_lens"
+version = "0.1.0"
+description = "A Streamlit component for interactive image zoom with movable lens"
+readme = "README.md"
+requires-python = ">=3.7"
+license = {text = "MIT"}
+authors = [
+    {name = "Your Name", email = "your.email@example.com"}
+]
+keywords = ["streamlit", "component", "image", "zoom", "lens"]
+dependencies = [
+    "streamlit>=1.28.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/yourusername/image_zoom_lens"
+
+[tool.setuptools]
+packages = ["image_zoom_lens"]
+
+[tool.setuptools.package-data]
+image_zoom_lens = ["frontend/*.html", "frontend/*.js", "frontend/*.css"]

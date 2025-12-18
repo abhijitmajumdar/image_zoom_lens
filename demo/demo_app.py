@@ -1,13 +1,4 @@
 import streamlit as st
-import sys
-from pathlib import Path
-
-# Add the streamlit_plugins directory to sys.path to import the component
-# demo_app.py -> demo -> image_zoom_lens -> streamlit_plugins
-parent_dir = str(Path(__file__).resolve().parent.parent.parent)
-if parent_dir not in sys.path:
-    sys.path.insert(0, parent_dir)
-
 from image_zoom_lens import image_zoom_lens
 
 st.set_page_config(page_title="Image Zoom Lens Demo", layout="wide")
