@@ -36,6 +36,13 @@ zoom_level = st.sidebar.slider(
     help="Magnification level of the zoom lens"
 )
 
+download_format = st.sidebar.radio(
+    "Download Format",
+    options=["jpg", "png"],
+    index=0,
+    help="Format for right-click downloaded images. JPG: smaller files, PNG: lossless quality"
+)
+
 st.sidebar.divider()
 st.sidebar.markdown("### Image Source")
 
@@ -103,6 +110,7 @@ if image_url:
         image_url=image_url,
         lens_size=lens_size,
         zoom_level=zoom_level,
+        download_format=download_format,
         key="zoom_lens_component"
     )
 else:

@@ -96,6 +96,7 @@
         let imageUrl = '';
         let currentZoomLevel = 2;
         let lensSize = 150;
+        let downloadFormat = 'jpg';
         
         const container = document.getElementById('container');
         const mainImage = document.getElementById('mainImage');
@@ -278,16 +279,20 @@
             ctx.stroke();
             
             // Download the canvas as image
+            const mimeType = downloadFormat === 'png' ? 'image/png' : 'image/jpeg';
+            const quality = downloadFormat === 'png' ? undefined : 0.95;
+            const extension = downloadFormat === 'png' ? 'png' : 'jpg';
+            
             canvas.toBlob(function(blob) {
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a');
                 a.href = url;
-                a.download = 'zoomed_image_' + Date.now() + '.png';
+                a.download = 'zoomed_image_' + Date.now() + '.' + extension;
                 document.body.appendChild(a);
                 a.click();
                 document.body.removeChild(a);
                 URL.revokeObjectURL(url);
-            });
+            }, mimeType, quality);
         }
         
         // Wait for image to load

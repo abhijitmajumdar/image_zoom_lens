@@ -23,6 +23,7 @@ def image_zoom_lens(
     image_url: str,
     lens_size: int = 150,
     zoom_level: float = 2.0,
+    download_format: str = 'jpg',
     key: Optional[str] = None,
 ) -> None:
     """
@@ -39,6 +40,9 @@ def image_zoom_lens(
     zoom_level : float, optional
         Initial zoom magnification level (default: 2.0).
         Range: 1.0-5.0x.
+    download_format : str, optional
+        Format for downloaded images: 'jpg' or 'png' (default: 'jpg').
+        JPG provides smaller file sizes, PNG preserves transparency.
     key : str, optional
         An optional string to use as the unique key for the component.
         If this is None, and the component's arguments are changed, the
@@ -67,6 +71,12 @@ def image_zoom_lens(
     # Validate parameters
     lens_size = max(50, min(300, lens_size))
     zoom_level = max(1.0, min(5.0, zoom_level))
+    download_format = download_format.lower()
+    if download_format not in ['jpg', 'jpeg', 'png']:
+        download_format = 'jpg'
+    # Normalize jpeg to jpg
+    if download_format == 'jpeg':
+        download_format = 'jpg'
     
     # Load the HTML file
     html_path = _COMPONENT_DIR / "frontend" / "index.html"
@@ -83,6 +93,9 @@ def image_zoom_lens(
     ).replace(
         "let lensSize = 150;",
         f"let lensSize = {lens_size};"
+    ).replace(
+        "let downloadFormat = 'jpg';",
+        f"let downloadFormat = '{download_format}';"
     ).replace(
         'mainImage.src = imageUrl;',
         f'mainImage.src = "{image_url}";'
