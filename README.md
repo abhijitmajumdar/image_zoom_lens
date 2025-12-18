@@ -62,31 +62,58 @@ image_zoom_lens(
 )
 ```
 
+### With PIL Image
+
+```python
+import streamlit as st
+from PIL import Image
+from image_zoom_lens import image_zoom_lens
+
+# Load and process image with PIL
+pil_image = Image.open("path/to/image.jpg")
+pil_image = pil_image.resize((800, 600))  # Resize if needed
+
+# Pass PIL image directly
+image_zoom_lens(image=pil_image, lens_size=200)
+```
+
+### With Numpy Array
+
+```python
+import streamlit as st
+import numpy as np
+from image_zoom_lens import image_zoom_lens
+
+# Create or process image as numpy array
+np_image = np.random.randint(0, 255, (600, 800, 3), dtype=np.uint8)
+
+# Pass numpy array directly
+image_zoom_lens(image=np_image, zoom_level=3.0)
+```
+
 ### With Uploaded Images
 
 ```python
 import streamlit as st
-import base64
+from PIL import Image
 from image_zoom_lens import image_zoom_lens
 
 uploaded_file = st.file_uploader("Upload Image", type=["png", "jpg", "jpeg"])
 
 if uploaded_file:
-    # Convert to base64 data URL
-    bytes_data = uploaded_file.read()
-    base64_data = base64.b64encode(bytes_data).decode()
-    image_url = f"data:{uploaded_file.type};base64,{base64_data}"
-    
-    image_zoom_lens(image_url=image_url)
+    # Open with PIL and pass directly
+    pil_image = Image.open(uploaded_file)
+    image_zoom_lens(image=pil_image)
 ```
 
 ## Parameters
 
 | Parameter | Type | Default | Description |
 |-----------|------|---------|-------------|
-| `image_url` | str | Required | URL or data URL of the image to display |
-| `lens_size` | int | 150 | Size of the zoom lens in pixels (50-300) |
-| `zoom_level` | float | 2.0 | Initial zoom magnification (1.0-5.0) |
+| `image` | str, PIL.Image, or np.ndarray | Required | Image to display: URL string, PIL Image object, or numpy array (H,W,3) or (H,W,4) |
+| `lens_size` | int | 150 | Size of the zoom lens in pixels (50-500) |
+| `zoom_level` | float | 2.0 | Initial zoom magnification (1.0-20.0) |
+| `download_format` | str | 'jpg' | Format for downloaded images: 'jpg' or 'png' |
 | `key` | str | None | Unique key for the component instance |
 
 ## Running the Demo

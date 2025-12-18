@@ -12,15 +12,67 @@ Features:
 import streamlit.components.v1 as components
 import os
 from pathlib import Path
-from typing import Optional
+from typing import Optional, Union
 from urllib.parse import quote
+import base64
+from io import BytesIO
 
 # Get the directory of this file (use absolute path)
 _COMPONENT_DIR = Path(__file__).resolve().parent
 
 
+def _convert_image_to_data_url(image) -> str:
+    """
+    Convert PIL Image or numpy array to base64 data URL.
+    
+    Parameters
+    ----------
+    image : PIL.Image.Image or np.ndarray
+        The image to convert
+        
+    Returns
+    -------
+    str
+        Base64 encoded data URL
+    """
+    try:
+        # Try importing PIL
+        from PIL import Image
+        
+        # If it's already a PIL Image
+        if isinstance(image, Image.Image):
+            buffered = BytesIO()
+            # Convert RGBA to RGB if necessary
+            if image.mode == 'RGBA':
+                image = image.convert('RGB')
+            image.save(buffered, format="PNG")
+            img_str = base64.b64encode(buffered.getvalue()).decode()
+            return f"data:image/png;base64,{img_str}"
+    except ImportError:
+        pass
+    
+    # Try numpy array
+    try:
+        import numpy as np
+        from PIL import Image
+        
+        if isinstance(image, np.ndarray):
+            # Convert numpy array to PIL Image
+            pil_image = Image.fromarray(image.astype('uint8'))
+            buffered = BytesIO()
+            if pil_image.mode == 'RGBA':
+                pil_image = pil_image.convert('RGB')
+            pil_image.save(buffered, format="PNG")
+            img_str = base64.b64encode(buffered.getvalue()).decode()
+            return f"data:image/png;base64,{img_str}"
+    except (ImportError, AttributeError):
+        pass
+    
+    raise TypeError("Image must be a PIL Image, numpy array, or string URL")
+
+
 def image_zoom_lens(
-    image_url: str,
+    image: Union[str, 'PIL.Image.Image', 'np.ndarray'],
     lens_size: int = 150,
     zoom_level: float = 2.0,
     download_format: str = 'jpg',
@@ -31,9 +83,11 @@ def image_zoom_lens(
     
     Parameters
     ----------
-    image_url : str
-        URL or path to the image to display. Can be a data URL, web URL, 
-        or file path.
+    image : str, PIL.Image.Image, or np.ndarray
+        Image to display. Can be:
+        - String: URL, file path, or data URL
+        - PIL Image: PIL.Image.Image object
+        - Numpy array: uint8 array with shape (H, W, 3) or (H, W, 4)
     lens_size : int, optional
         Size of the zoom lens in pixels (default: 150).
         Range: 50-500 pixels.
@@ -59,14 +113,31 @@ def image_zoom_lens(
     -------
     >>> import streamlit as st
     >>> from image_zoom_lens import image_zoom_lens
+    >>> from PIL import Image
+    >>> import numpy as np
     >>> 
-    >>> st.title("Image Zoom Lens Demo")
+    >>> # Example 1: Using URL
     >>> image_zoom_lens(
-    ...     image_url="https://example.com/image.jpg",
+    ...     image="https://example.com/image.jpg",
     ...     lens_size=200,
     ...     zoom_level=3.0
     ... )
+    >>> 
+    >>> # Example 2: Using PIL Image
+    >>> pil_image = Image.open("local_image.jpg")
+    >>> image_zoom_lens(image=pil_image, lens_size=150)
+    >>> 
+    >>> # Example 3: Using numpy array
+    >>> np_image = np.random.randint(0, 255, (400, 400, 3), dtype=np.uint8)
+    >>> image_zoom_lens(image=np_image, zoom_level=2.5)
     """
+    
+    # Convert image to URL if needed
+    if isinstance(image, str):
+        image_url = image
+    else:
+        # Convert PIL or numpy to data URL
+        image_url = _convert_image_to_data_url(image)
     
     # Validate parameters
     lens_size = max(50, min(500, lens_size))

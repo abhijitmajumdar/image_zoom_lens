@@ -49,7 +49,7 @@ st.sidebar.markdown("### Image Source")
 # Image selection
 image_option = st.sidebar.radio(
     "Select image source:",
-    ["Sample Image (URL)", "Upload Your Own", "Custom URL"]
+    ["Sample Image (URL)", "Upload Your Own", "Custom URL", "Generate Test Pattern"]
 )
 
 image_url = None
@@ -88,6 +88,46 @@ elif image_option == "Custom URL":
     )
     if not image_url:
         st.info("👆 Please enter an image URL to get started")
+        
+elif image_option == "Generate Test Pattern":
+    import numpy as np
+    from PIL import Image, ImageDraw, ImageFont
+    
+    st.sidebar.info("Generating a test pattern using PIL/numpy")
+    
+    # Create a colorful test pattern
+    width, height = 800, 600
+    img = Image.new('RGB', (width, height), color='white')
+    draw = ImageDraw.Draw(img)
+    
+    # Draw colorful gradient circles
+    for i in range(20):
+        x = (i * 40 + 50) % width
+        y = (i * 30 + 50) % height
+        radius = 30 + i * 5
+        color = (
+            (i * 30) % 255,
+            (i * 50 + 100) % 255,
+            (255 - i * 20) % 255
+        )
+        draw.ellipse([x-radius, y-radius, x+radius, y+radius], 
+                     fill=color, outline='black', width=2)
+    
+    # Draw grid lines
+    for i in range(0, width, 50):
+        draw.line([(i, 0), (i, height)], fill='lightgray', width=1)
+    for i in range(0, height, 50):
+        draw.line([(0, i), (width, i)], fill='lightgray', width=1)
+    
+    # Add text
+    try:
+        font = ImageFont.truetype("Arial.ttf", 36)
+    except:
+        font = ImageFont.load_default()
+    draw.text((width//2 - 150, height//2), "Test Pattern", fill='black', font=font)
+    
+    # Use PIL image directly (not converted to URL yet)
+    image_url = img
 
 # Display the component
 st.divider()
@@ -103,7 +143,7 @@ if image_url:
     """)
     
     image_zoom_lens(
-        image_url=image_url,
+        image=image_url,  # Can be URL string, PIL Image, or numpy array
         lens_size=lens_size,
         zoom_level=zoom_level,
         download_format=download_format,
