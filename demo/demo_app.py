@@ -1,0 +1,149 @@
+import streamlit as st
+import sys
+from pathlib import Path
+
+# Add the streamlit_plugins directory to sys.path to import the component
+# demo_app.py -> demo -> image_zoom_lens -> streamlit_plugins
+parent_dir = str(Path(__file__).resolve().parent.parent.parent)
+if parent_dir not in sys.path:
+    sys.path.insert(0, parent_dir)
+
+from image_zoom_lens import image_zoom_lens
+
+st.set_page_config(page_title="Image Zoom Lens Demo", layout="wide")
+
+st.title("🔍 Image Zoom Lens Component")
+st.markdown("""
+This interactive component allows you to zoom into images with a movable lens.
+
+**Features:**
+- 🖱️ **Move mouse** over the image to see the zoom lens
+- 🎚️ **Mouse wheel** to dynamically adjust zoom level
+- 📏 **Sliders** to configure lens size and zoom level
+- 💾 **Right-click** on the image to download it with the zoomed lens overlay
+""")
+
+st.divider()
+
+# Sidebar configuration
+st.sidebar.header("Configuration")
+lens_size = st.sidebar.slider(
+    "Lens Size (pixels)",
+    min_value=50,
+    max_value=300,
+    value=150,
+    step=10,
+    help="Size of the circular zoom lens"
+)
+
+zoom_level = st.sidebar.slider(
+    "Initial Zoom Level",
+    min_value=1.0,
+    max_value=5.0,
+    value=2.0,
+    step=0.1,
+    help="Magnification level of the zoom lens"
+)
+
+st.sidebar.divider()
+st.sidebar.markdown("### Image Source")
+
+# Image selection
+image_option = st.sidebar.radio(
+    "Select image source:",
+    ["Sample Image (URL)", "Upload Your Own", "Custom URL"]
+)
+
+image_url = None
+
+if image_option == "Sample Image (URL)":
+    # Use a sample image from the web
+    image_url = st.sidebar.selectbox(
+        "Choose a sample image:",
+        [
+            "https://upload.wikimedia.org/wikipedia/commons/thumb/3/3f/Placeholder_view_vector.svg/681px-Placeholder_view_vector.svg.png",
+            "https://images.unsplash.com/photo-1506905925346-21bda4d32df4?w=800",
+            "https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=800",
+        ],
+        format_func=lambda x: x.split('/')[-1][:40] + "..."
+    )
+    
+elif image_option == "Upload Your Own":
+    uploaded_file = st.sidebar.file_uploader(
+        "Upload an image",
+        type=["png", "jpg", "jpeg", "gif", "bmp"]
+    )
+    if uploaded_file is not None:
+        import base64
+        # Convert uploaded file to base64 data URL
+        bytes_data = uploaded_file.read()
+        base64_data = base64.b64encode(bytes_data).decode()
+        mime_type = uploaded_file.type
+        image_url = f"data:{mime_type};base64,{base64_data}"
+    else:
+        st.info("👆 Please upload an image to get started")
+        
+elif image_option == "Custom URL":
+    image_url = st.sidebar.text_input(
+        "Enter image URL:",
+        placeholder="https://example.com/image.jpg"
+    )
+    if not image_url:
+        st.info("👆 Please enter an image URL to get started")
+
+# Display the component
+st.divider()
+st.subheader("Interactive Zoom Lens")
+
+if image_url:
+    st.markdown("""
+    <div style='background-color: #f0f0f0; padding: 15px; border-radius: 5px; margin-bottom: 20px;'>
+    <strong>Instructions:</strong>
+    <ul>
+        <li>Hover your mouse over the image to activate the zoom lens</li>
+        <li>Scroll with your mouse wheel while hovering to adjust zoom level</li>
+        <li>Use the sliders below the image to adjust lens size and zoom level</li>
+        <li>Right-click anywhere on the image to download a snapshot with the zoom lens overlay</li>
+    </ul>
+    </div>
+    """, unsafe_allow_html=True)
+    
+    image_zoom_lens(
+        image_url=image_url,
+        lens_size=lens_size,
+        zoom_level=zoom_level,
+        key="zoom_lens_component"
+    )
+else:
+    st.warning("⚠️ Please select or provide an image to display")
+
+st.divider()
+
+# Additional information
+with st.expander("ℹ️ About this Component"):
+    st.markdown("""
+    ### Image Zoom Lens Component
+    
+    This is a custom Streamlit component that provides an interactive way to zoom into images.
+    
+    **Technical Details:**
+    - Built with HTML5 Canvas and JavaScript
+    - Uses circular clipping for the zoom lens effect
+    - Mouse wheel events for dynamic zoom control
+    - Canvas API for rendering the downloadable image
+    
+    **Use Cases:**
+    - Medical image analysis
+    - Photo inspection and quality control
+    - Map exploration
+    - Art and design review
+    - Scientific image analysis
+    
+    **Component Files:**
+    - `__init__.py` - Python wrapper for Streamlit
+    - `frontend/index.html` - HTML/JavaScript implementation
+    - `demo_app.py` - This demo application
+    """)
+
+st.divider()
+st.caption("Made with ❤️ using Streamlit Custom Components")
