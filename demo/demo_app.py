@@ -95,16 +95,12 @@ st.subheader("Interactive Zoom Lens")
 
 if image_url:
     st.markdown("""
-    <div style='background-color: #f0f0f0; padding: 15px; border-radius: 5px; margin-bottom: 20px;'>
-    <strong>Instructions:</strong>
-    <ul>
-        <li>Hover your mouse over the image to activate the zoom lens</li>
-        <li>Scroll with your mouse wheel while hovering to adjust zoom level</li>
-        <li>Use the sliders below the image to adjust lens size and zoom level</li>
-        <li>Right-click anywhere on the image to download a snapshot with the zoom lens overlay</li>
-    </ul>
-    </div>
-    """, unsafe_allow_html=True)
+    **Instructions:**
+    - Hover your mouse over the image to activate the zoom lens
+    - Scroll with your mouse wheel while hovering to adjust zoom level
+    - Use the sliders below the image to adjust lens size and zoom level
+    - Right-click anywhere on the image to download a snapshot with the zoom lens overlay
+    """)
     
     image_zoom_lens(
         image_url=image_url,
