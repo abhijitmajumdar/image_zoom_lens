@@ -20,10 +20,29 @@ An interactive Streamlit component that displays images with a movable zoom lens
 
 ## Installation
 
-1. Ensure the component directory is in your Python path
-2. Install Streamlit if you haven't already:
+### Install from GitHub
+
 ```bash
-pip install streamlit
+pip install git+https://github.com/abhijitmajumdar/image_zoom_lens.git
+```
+
+### Install from Source
+
+```bash
+git clone https://github.com/abhijitmajumdar/image_zoom_lens.git
+cd image_zoom_lens
+pip install -e .
+```
+
+### Development Installation
+
+For development with additional tools (ruff, pre-commit):
+
+```bash
+git clone https://github.com/abhijitmajumdar/image_zoom_lens.git
+cd image_zoom_lens
+pip install -e ".[dev]"
+pre-commit install
 ```
 
 ## Usage
