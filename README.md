@@ -2,6 +2,9 @@
 
 An interactive Streamlit component that displays images with a movable zoom lens.
 
+![Demo](media/demo_video_circle.gif)
+(Image from [DOTA 1.5 Validation set](https://captain-whu.github.io/DOTA/dataset.html). Dynamic zooming in video is through mouse scroll wheel)
+
 ## Features
 
 ✨ **Interactive Zoom Lens**
