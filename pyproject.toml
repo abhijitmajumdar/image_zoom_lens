@@ -10,7 +10,7 @@ readme = "README.md"
 requires-python = ">=3.7"
 license = {text = "MIT"}
 authors = [
-    {name = "Your Name", email = "your.email@example.com"}
+    {name = "Abhijit Majumdar", email = "abhijit.g.majumdar@gmail.com"}
 ]
 keywords = ["streamlit", "component", "image", "zoom", "lens"]
 dependencies = [
@@ -24,7 +24,7 @@ dev = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/yourusername/image_zoom_lens"
+Homepage = "https://github.com/abhijitmajumdar/image_zoom_lens"
 
 [tool.setuptools]
 packages = ["image_zoom_lens"]
