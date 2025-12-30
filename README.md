@@ -23,6 +23,12 @@ An interactive Streamlit component that displays images with a movable zoom lens
 
 ## Installation
 
+### Install from PyPi (Recommended)
+
+```bash
+pip install image_zoom_lens
+```
+
 ### Install from GitHub
 
 ```bash
